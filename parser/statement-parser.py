@@ -6,8 +6,8 @@ import time
 import pandas as pd
 
 STATEMENT_XL_FILES = [
-  '/Users/sohardhchobera/Downloads/50100243021840_1684433436965.xls',
-  '/Users/sohardhchobera/Downloads/115528583_1684433372813.xls']
+  '/Users/sohardhchobera/Downloads/50100243021840_1684655192040.xls',
+  '/Users/sohardhchobera/Downloads/115528583_1684655208443.xls']
 
 
 def excel_to_json(xlfile):
@@ -66,23 +66,23 @@ def parse_hdfc(transaction):
   desc = transaction['description']
   if desc.startswith('FD THROUGH') or desc.startswith(
       'PRIN AND INT AUTO_REDEEM'):
-    transaction['asset_account'] = 'HDFC FD'
+    transaction['opposite_account'] = 'HDFC FD'
     transaction['tag'] = 'bank'
 
   if desc.find('RELOAD FOREX CARD') != -1:
-    transaction['asset_account'] = 'HDFC Forex Card'
-    transaction['tag'] = 'forex_card,wallet,bank'
+    transaction['opposite_account'] = 'HDFC Forex Card'
+    transaction['tag'] = 'forex_card wallet bank'
 
   if desc.startswith('CC') and desc.find('AUTOPAY') != -1:
     transaction['opposite_account'] = 'HDFC Bank'
-    transaction['tag'] = 'credit_card,bank'
+    transaction['tag'] = 'credit_card bank'
     transaction['category'] = 'bill'
   if desc.startswith('CREDIT INTEREST CAPITALISED'):
     transaction['opposite_account'] = 'HDFC Bank'
-    transaction['tag'] = 'interest,bank'
+    transaction['tag'] = 'interest bank'
   if desc.startswith('INT. AUTO_REDEMPTION'):
     transaction['opposite_account'] = 'HDFC Bank'
-    transaction['tag'] = 'interest,bank'
+    transaction['tag'] = 'interest bank'
 
 
 def parse_salary(transaction):
@@ -99,8 +99,8 @@ def parse_upi(transaction):
   desc = transaction['description']
   op_acc_name = desc.split('-')[1]
   if op_acc_name == 'ADD MONEY TO WALLET':
-    transaction['asset_account'] = 'PAYTM'
-    transaction['tag'] = transaction['tag'] + ',wallet'
+    transaction['opposite_account'] = 'PAYTM'
+    transaction['tag'] = transaction['tag'] + ' wallet'
   else:
     transaction['opposite_account'] = op_acc_name
 
